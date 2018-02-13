@@ -96,7 +96,7 @@ class IndexView(ListView):
             viewData.rows.append(viewRow)
             viewRow.clear()
             datas.append(viewData)
-        context.datas = datas
+        context['datas'] = datas
         return context
 
     def pagination_data(self, paginator, page, is_paginated):

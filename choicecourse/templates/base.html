@@ -1,0 +1,139 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>选课系统</title>
+
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!--<link rel="stylesheet" href="{% static 'blog/css/pace.css' %}">-->
+    <link rel="stylesheet" href="{% static 'custom/css/custom.css' %}">
+    <!--<link rel="stylesheet" href="{% static 'blog/css/highlights/github.css' %}">-->
+
+    <!-- js -->
+    <script src="{% static 'bootstrap/js/jquery-2.2.3.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--<script src="{% static 'blog/js/pace.min.js' %}"></script>
+    <script src="{% static 'blog/js/modernizr.custom.js' %}"></script>-->
+    <!--<script src="{% static 'custom/js/script.js' %}"></script>-->
+</head>
+
+<body>
+<div class="container">
+    <header id="site-header">
+        <div class="row">
+            <div class="col-md-2 col-sm-5 col-xs-8">
+                <div class="logo">
+                    <h1><a href="{% url 'course:index' %}"><b>选课系统</b></a></h1>
+                </div>
+            </div><!-- col-md-4 -->
+            <div class="col-md-10 col-sm-7 col-xs-4">
+                <nav class="main-nav" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" id="trigger-overlay" class="navbar-toggle">
+                            <span class="ion-navicon"></span>
+                        </button>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li class="cl-effect-11"><a href="{% url 'course:index' %}" data-hover="课程信息">课程信息</a></li>
+                            <li class="cl-effect-11"><a href="about.html" data-hover="教师信息">教师信息</a></li>
+                            <li class="cl-effect-11"><a href="contact.html" data-hover="学生信息">学生信息</a></li>
+                            <li class="cl-effect-11"><a href="contact.html" data-hover="课时信息">课时信息</a></li>
+                        </ul>
+                        <!--<ul class="nav navbar-nav navbar-right">
+                            {% if session.isLogined %}
+                            <li class="cl-effect-11"><a href="#" data-hover="{{session.username}}">{{session.username}}</a></li>
+                            <!--{% if session.cur_is_post %}
+                            <li class="cl-effect-11"><a href="/post/add" data-hover="修改">修改</a></li>
+                            {% endif %}-->
+                            <!--
+                                <li class="cl-effect-11"><a href="/post/add" data-hover="发布">发布</a></li>
+                            <li class="cl-effect-11"><a href="#" data-hover="登出">登出</a></li>
+                            {% else %}
+                            <li class="cl-effect-11"><a href="#" data-hover="登录">登录</a></li>
+                            {% endif %}
+                            
+                        </ul>
+                    -->
+                    <!--<ul id="header-search-box" class="nav-right">
+                        <a id="search-menu" href="#">
+                        <span id="search-icon" class="ion-ios-search-strong"></span>
+                        </a>
+                        <div id="search-form" class="search-form">
+                            <form role="search" method="get" id="searchform" action="{% url 'course:index' %}">
+                                <input type="search" name="q" placeholder="搜索" required>
+                                <button type="submit">
+                                    <span class="ion-ios-search-strong"></span>
+                                </button>
+                            </form>
+                        </div>
+                    </ul>-->
+                    </div><!-- /.navbar-collapse -->
+                    <div id="header-search-box">
+                        <a id="search-menu" class="search-menu" href="#">
+                        <span id="search-icon" class="ion-ios-search-strong"></span>
+                        </a>
+                        <div id="search-form" class="search-form">
+                            <form role="search" method="get" id="searchform" action="{% url 'course:index' %}">
+                                <input type="search" name="q" placeholder="搜索" required>
+                                <button type="submit">
+                                    <span class="ion-ios-search-strong"></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            </div><!-- col-md-8 -->
+        </div>
+    </header>
+</div>
+
+<div class="content-body">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-12">
+                {% block main %}
+                {% endblock main %}
+            </main>
+        </div>
+    </div>
+</div>
+<footer id="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="copyright">&copy 2018 - Jiejing Shan
+                    - 由<a href="#" >Jiejing Shan</a> Created.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Mobile Menu -->
+<!--
+<div class="overlay overlay-hugeinc">
+    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
+    <nav>
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="full-width.html">博客</a></li>
+            <li><a href="about.html">关于</a></li>
+            <li><a href="contact.html">联系</a></li>
+        </ul>
+    </nav>
+</div>
+
+<script src="{% static 'bootstrap/js/script.js' %}"></script>
+-->
+
+</body>
+</html>
