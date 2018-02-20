@@ -4,7 +4,7 @@
 
 from django.shortcuts import render
 from django.views.generic import ListView
-from .models import Students, Course
+from .models import Student, Course
 
 import logging
 
@@ -64,39 +64,53 @@ class IndexView(ListView):
         pagination_data = self.pagination_data(paginator, page, is_paginated)
         context.update(pagination_data)
         courses = Course.objects.all()
+        context['new_url'] = 'http://127.0.0.1:8000/admin/course/course/'
         context['cols'] = ["课程名称", "教课老师", "年级", "学生名单", "课时"]
         datas = []
         for course in courses:
-            #teachers = course.teachers.all()
-            #for teacher in teachers:
-            viewData = ListViewData()
-            viewData.absoluteurl = course.get_absolute_url()
-            viewData.pk = course.pk
-            viewRow = ListViewRow()
-            viewRow.url = course.get_absolute_url()
-            viewRow.row_str = course.name
-            viewData.rows.append(viewRow)
-            viewRow.clear()
-            viewRow.url = course.teacher.get_absolute_url()
-            viewRow.row_str = course.teacher.name
-            viewData.rows.append(viewRow)
-            viewRow.clear()
-            viewRow.row_str = course.grade
-            viewData.rows.append(viewRow)
-            viewRow.clear()
-            students = course.students.all()
-            if 2 < len(students):
+            logger.error("course: %s" % course)
+            teachers = course.teachers.all()
+            logger.error("teachers: %s" % teachers)
+            for teacher in teachers:
+                logger.error("teacher: %s" % teacher)
+                viewData = ListViewData()
+                viewData.absoluteurl = course.get_absolute_url()
+                viewData.pk = course.pk
+                viewRow = ListViewRow()
                 viewRow.url = course.get_absolute_url()
-                viewRow.row_str = "..."
-            else :
-                viewRow.row_str = str([student.name for student in students])[1:-1]
-            viewData.rows.append(viewRow)
-            viewRow.clear()
-            viewRow.row_str = course.classes
-            viewData.rows.append(viewRow)
-            viewRow.clear()
-            datas.append(viewData)
+                viewRow.row_str = course.name
+                logger.error("name row: %s, %s" % (viewRow.row_str, viewRow.url))
+                viewData.rows.append(viewRow)
+                logger.error("rows size %d, %s" % (len(viewData.rows), str(viewData.rows)))
+                #viewRow.clear()
+                viewRow2 = ListViewRow()
+                viewRow2.url = teacher.get_absolute_url()
+                viewRow2.row_str = teacher.name
+                viewData.rows.append(viewRow2)
+                #viewRow.clear()
+                viewRow3 = ListViewRow()
+                viewRow3.row_str = str(course.grade)
+                viewData.rows.append(viewRow3)
+                #viewRow.clear()
+                viewRow4 = ListViewRow()
+                students = course.students.all()
+                if 2 < len(students):
+                    viewRow4.url = course.get_absolute_url()
+                    viewRow4.row_str = "..."
+                else :
+                    viewRow4.row_str = str([student.name for student in students])[1:-1]
+                    logger.error("row_str: %s" % viewRow4.row_str)
+                logger.error("students: %s" % viewRow4.row_str)
+                viewData.rows.append(viewRow4)
+                #viewRow.clear()
+                viewRow5 = ListViewRow()
+                viewRow5.row_str = course.classes
+                viewData.rows.append(viewRow5)
+                #viewRow.clear()
+                datas.append(viewData)
         context['datas'] = datas
+        logger.error("datas size %d" % len(datas))
+        logger.error("%s, %s" % (datas[0].rows[0].url, datas[0].rows[0].row_str))
         return context
 
     def pagination_data(self, paginator, page, is_paginated):
@@ -145,3 +159,6 @@ class IndexView(ListView):
             'last': last,
         }
         return data
+
+class DetailViews(ListView):
+    pass

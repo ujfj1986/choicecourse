@@ -10,4 +10,6 @@ app_name = 'course'
 
 urlpatterns = [
     url(r'^index.html$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'course/(?P<pk>[0-9]+)/&', views.DetailViews.as_view(), name='detail'),
 ]

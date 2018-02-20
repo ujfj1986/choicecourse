@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
  {% block main %}
-    <a class="btn btn-primary" href="#" data-hover="新增"><h5>新增</h5></a>
+    <a class="btn btn-primary" href="{{ new_url }}" data-hover="新增"><h5>新增</h5></a>
     <table class="table">
         <thead>
             <tr>
@@ -12,14 +12,16 @@
         </thead>
         <tbody>
             {% for data in datas %}
+            <tr>
                 <th scope="row"><a href="{{ data.absoluteurl }}"> {{ data.pk }}</a></th>
                 {% for row in data.rows %}
                     {% if row.url %}
-                        <td><a href="{{row.url}}">{{ row.name }}</a></td>
+                        <td><a href="{{row.url}}" class="btn btn-link" >{{ row.row_str }}</a></td>
                     {% else %}
-                        <td>{{row.name}}</td>
+                        <td>{{row.row_str}}</td>
                     {% endif %}
                 {% endfor %}
+            </tr>
             {% endfor %}
         </tbody>
     </table>

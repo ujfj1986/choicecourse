@@ -7,7 +7,7 @@ from django.urls import reverse
 # Create your models here.
 
 
-class Students(models.Model):
+class Student(models.Model):
 
     name = models.CharField(max_length=30,unique=True)
     sex = models.CharField(max_length=20)
@@ -16,6 +16,9 @@ class Students(models.Model):
     parent = models.CharField(max_length = 20)
     parent_phone = models.CharField(max_length = 20)
 
+    def __str__(self):
+        return self.name
+
 
 class Teacher(models.Model):
     name = models.CharField(max_length=30,unique=True)
@@ -23,15 +26,21 @@ class Teacher(models.Model):
     #organization = models.CharField(max_length=50)
     #city = models.CharField(max_length=30)
     def get_absolute_url(self):
-        return reverse('teacher:detail', kwargs={'pk': self.pk})
+        #return reverse('teacher:detail', kwargs={'pk': self.pk})
+        return "/teacher/" + str(self.pk) + "/"
+
+    def __str__(self):
+        return self.name
 
 
 class Course(models.Model):
     name = models.CharField(max_length=30,unique=True)
-    students = models.ManyToManyField(Students) # 一个课程有多个学生
-    teachers = models.ManyToManyField(Teacher,
+    students = models.ManyToManyField(Student) # 一个课程有多个学生
+    '''teachers = models.ManyToManyField(Teacher,
         through="ClassInfo", #通过ClassInfo表记录老师与课程的多对多关系
         through_fields = ("course", "teacher")) #一个课有多个老师可以讲
+    '''
+    teachers = models.ManyToManyField(Teacher)
     grade = models.CharField(max_length=20, default='0')
     tuition = models.IntegerField()
     #startime = models.CharField(max_length=50)
@@ -40,7 +49,7 @@ class Course(models.Model):
         return reverse('course:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return "%s, %s, %s" % (self.name, self.teacher.all(), self.grade)
+        return "%s, %s, %s" % (self.name, self.teachers.all(), self.grade)
 
     class Meta:
         #unique_together = ["name", "teachers", "grade"]
@@ -52,4 +61,7 @@ class ClassInfo(models.Model):
     end_time = models.DateTimeField()
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    students = models.ManyToManyField(Students)
+    students = models.ManyToManyField(Student)
+
+    def __str__(self):
+        return "%s, %s, %s, %s" % (self.course, self.teacher, self.start_time, self.end_time)
