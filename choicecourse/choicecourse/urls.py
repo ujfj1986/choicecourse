@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
-app_name = 'choise_course'
+app_name = 'choice_course'
 
 # Examples:
 # url(r'^$', 'choisecourse.views.home', name='home'),
