@@ -11,15 +11,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for data in datas %}
+            {% for row in rows %}
             <tr>
-                <th scope="row"><a href="{{ data.absoluteurl }}"> {{ data.pk }}</a></th>
-                {% for row in data.rows %}
-                    {% if row.url %}
-                        <td><a href="{{row.url}}" class="btn btn-link" >{{ row.row_str }}</a></td>
+                <th scope="row"><a href="{{ row.row_url }}"> {{ row.row_num }}</a></th>
+                {% for elem in row.elems %}
+                    {% if elem.elem_url %}
+                        <td><a href="{{elem.elem_url}}" class="btn btn-link" >{{ elem.elem_str }}</a></td>
                     {% else %}
-                        <td>{{row.row_str}}</td>
+                        <td>{{elem.elem_str}}</td>
                     {% endif %}
+                {% empty %}
+                    <td>空</td>
                 {% endfor %}
             </tr>
             {% endfor %}

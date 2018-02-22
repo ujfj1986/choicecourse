@@ -11,30 +11,32 @@ import logging
 logger = logging.getLogger('course.view')
 
 # Create your views here.
-class ListViewRow:
-    url = ""
-    row_str = ""
+class Element:
+    elem_url = ""
+    elem_str = ""
 
     def __init__(self):
-        self.url = ""
-        self.row_str = ""
+        self.elem_url = ""
+        self.elem_str = ""
 
     def clear(self):
-        self.url = ""
-        self.row_str = ""
+        self.elem_url = ""
+        self.elem_str = ""
 
     def __str__(self):
-        return self.row_str
+        return self.elem_str
 
-class ListViewData:
-    absoluteurl = ""
+class Row:
+    row_url = ""
     pk = ""
-    rows = []
+    row_num = 1
+    elems = []
 
     def __init__(self):
-        self.absoluteurl = ""
+        self.row_url = ""
         self.pk = ""
-        self.rows = []
+        self.elems = []
+        self.row_num = 1
 
 class IndexView(ListView):
     model = Course
@@ -67,50 +69,48 @@ class IndexView(ListView):
         context['new_url'] = 'http://127.0.0.1:8000/admin/course/course/'
         context['cols'] = ["课程名称", "教课老师", "年级", "学生名单", "课时"]
         datas = []
+        row_num = 1
         for course in courses:
             logger.error("course: %s" % course)
             teachers = course.teachers.all()
             logger.error("teachers: %s" % teachers)
             for teacher in teachers:
                 logger.error("teacher: %s" % teacher)
-                viewData = ListViewData()
-                viewData.absoluteurl = course.get_absolute_url()
-                viewData.pk = course.pk
-                viewRow = ListViewRow()
-                viewRow.url = course.get_absolute_url()
-                viewRow.row_str = course.name
-                logger.error("name row: %s, %s" % (viewRow.row_str, viewRow.url))
-                viewData.rows.append(viewRow)
-                logger.error("rows size %d, %s" % (len(viewData.rows), str(viewData.rows)))
-                #viewRow.clear()
-                viewRow2 = ListViewRow()
-                viewRow2.url = teacher.get_absolute_url()
-                viewRow2.row_str = teacher.name
-                viewData.rows.append(viewRow2)
-                #viewRow.clear()
-                viewRow3 = ListViewRow()
-                viewRow3.row_str = str(course.grade)
-                viewData.rows.append(viewRow3)
-                #viewRow.clear()
-                viewRow4 = ListViewRow()
+                row = Row()
+                row.row_url = course.get_absolute_url()
+                row.pk = course.pk
+                row.row_num = row_num
+                row_num += 1
+                elem = Element()
+                elem.elem_url = course.get_absolute_url()
+                elem.elem_str = course.name
+                logger.error("name row: %s, %s" % (elem.elem_str, elem.elem_url))
+                row.elems.append(elem)
+                logger.error("elems size %d, %s" % (len(row.elems), str(row.elems)))
+                elem2 = Element()
+                elem2.elem_url = teacher.get_absolute_url()
+                elem2.elem_str = teacher.name
+                row.elems.append(elem2)
+                elem3 = Element()
+                elem3.elem_str = str(course.grade)
+                row.elems.append(elem3)
+                elem4 = Element()
                 students = course.students.all()
                 if 2 < len(students):
-                    viewRow4.url = course.get_absolute_url()
-                    viewRow4.row_str = "..."
+                    elem4.elem_url = course.get_absolute_url()
+                    elem4.elem_str = "..."
                 else :
-                    viewRow4.row_str = str([student.name for student in students])[1:-1]
-                    logger.error("row_str: %s" % viewRow4.row_str)
-                logger.error("students: %s" % viewRow4.row_str)
-                viewData.rows.append(viewRow4)
-                #viewRow.clear()
-                viewRow5 = ListViewRow()
-                viewRow5.row_str = course.classes
-                viewData.rows.append(viewRow5)
-                #viewRow.clear()
-                datas.append(viewData)
-        context['datas'] = datas
+                    elem4.elem_str = str([student.name for student in students])[1:-1]
+                    logger.error("elem_str: %s" % elem4.elem_str)
+                logger.error("students: %s" % elem4.elem_str)
+                row.elems.append(elem4)
+                elem5 = Element()
+                elem5.elem_str = course.classes
+                row.elems.append(elem5)
+                datas.append(row)
+        context['rows'] = datas
         logger.error("datas size %d" % len(datas))
-        logger.error("%s, %s" % (datas[0].rows[0].url, datas[0].rows[0].row_str))
+        logger.error("%s, %s" % (datas[0].elems[0].elem_url, datas[0].elems[0].elem_str))
         return context
 
     def pagination_data(self, paginator, page, is_paginated):
