@@ -5,71 +5,74 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from .models import Student, Course
+from .baseviews import IndexView, Element, Row
 
 import logging
 
 logger = logging.getLogger('course.view')
 
 # Create your views here.
-class Element:
-    elem_url = ""
-    elem_str = ""
-
-    def __init__(self):
-        self.elem_url = ""
-        self.elem_str = ""
-
-    def clear(self):
-        self.elem_url = ""
-        self.elem_str = ""
-
-    def __str__(self):
-        return self.elem_str
-
-class Row:
-    row_url = ""
-    pk = ""
-    row_num = 1
-    elems = []
-
-    def __init__(self):
-        self.row_url = ""
-        self.pk = ""
-        self.elems = []
-        self.row_num = 1
-
-class IndexView(ListView):
+class CourseIndexView(IndexView):
     model = Course
-    template_name = 'course/index.html'
-    context_object_name = 'context'
-    paginate_by = 10
+    new_url = 'http://127.0.0.1:8000/admin/course/course/'
+    cols = ["课程名称", "教课老师", "年级", "学生名单", "课时"]
 
-    '''def get(self, request, *args, **kwargs):
-        res = super(IndexView, self).get(request, *args, **kwargs)
-        self.blogsession.update(request)
-        self.blogsession.setToSession(request)
-        return res'''
+    @staticmethod
+    def _get_name_element(course):
+        elem = Element()
+        elem.elem_url = course.get_absolute_url()
+        elem.elem_str = course.name
+        logger.error("name row: %s, %s" % (elem.elem_str, elem.elem_url))
+        return elem
 
-    '''def get_queryset(self):
-        students = super(IndexView, self).get_queryset()
-        for post in posts:
-            post.update_body()
-        return posts
-    '''
+    @staticmethod
+    def _get_teacher_element(teacher):
+        elem = Element()
+        elem.elem_url = teacher.get_absolute_url()
+        elem.elem_str = teacher.name
+        return elem
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        paginator = context.get('paginator')
-        page = context.get('page_obj')
-        is_paginated = context.get('is_paginated')
+    @staticmethod
+    def _get_grade_element(course):
+        elem = Element()
+        elem.elem_str = str(course.grade)
+        return elem
 
-        pagination_data = self.pagination_data(paginator, page, is_paginated)
-        context.update(pagination_data)
+    @staticmethod
+    def _get_students_element(course):
+        elem = Element()
+        students = course.students.all()
+        if 2 < len(students):
+            elem.elem_url = course.get_absolute_url()
+            elem.elem_str = "..."
+        else :
+            elem.elem_str = str([student.name for student in students])[1:-1]
+        logger.error("students: %s" % elem.elem_str)
+        return elem
+
+    @staticmethod
+    def _get_classes_element(course):
+        elem = Element()
+        elem.elem_str = course.classes
+        return elem
+
+    def _get_cols(self):
+        return self.cols
+
+    def _get_new_url(self):
+        return self.new_url
+    
+    def _get_rows(self):
         courses = Course.objects.all()
-        context['new_url'] = 'http://127.0.0.1:8000/admin/course/course/'
-        context['cols'] = ["课程名称", "教课老师", "年级", "学生名单", "课时"]
-        datas = []
+        rows = []
         row_num = 1
+        _help_dic = {
+            self.cols[0]: CourseIndexView._get_name_element,
+            self.cols[1]: CourseIndexView._get_teacher_element,
+            self.cols[2]: CourseIndexView._get_grade_element,
+            self.cols[3]: CourseIndexView._get_students_element,
+            self.cols[4]: CourseIndexView._get_classes_element,
+        }
         for course in courses:
             logger.error("course: %s" % course)
             teachers = course.teachers.all()
@@ -81,84 +84,13 @@ class IndexView(ListView):
                 row.pk = course.pk
                 row.row_num = row_num
                 row_num += 1
-                elem = Element()
-                elem.elem_url = course.get_absolute_url()
-                elem.elem_str = course.name
-                logger.error("name row: %s, %s" % (elem.elem_str, elem.elem_url))
-                row.elems.append(elem)
-                logger.error("elems size %d, %s" % (len(row.elems), str(row.elems)))
-                elem2 = Element()
-                elem2.elem_url = teacher.get_absolute_url()
-                elem2.elem_str = teacher.name
-                row.elems.append(elem2)
-                elem3 = Element()
-                elem3.elem_str = str(course.grade)
-                row.elems.append(elem3)
-                elem4 = Element()
-                students = course.students.all()
-                if 2 < len(students):
-                    elem4.elem_url = course.get_absolute_url()
-                    elem4.elem_str = "..."
-                else :
-                    elem4.elem_str = str([student.name for student in students])[1:-1]
-                    logger.error("elem_str: %s" % elem4.elem_str)
-                logger.error("students: %s" % elem4.elem_str)
-                row.elems.append(elem4)
-                elem5 = Element()
-                elem5.elem_str = course.classes
-                row.elems.append(elem5)
-                datas.append(row)
-        context['rows'] = datas
-        logger.error("datas size %d" % len(datas))
-        logger.error("%s, %s" % (datas[0].elems[0].elem_url, datas[0].elems[0].elem_str))
-        return context
-
-    def pagination_data(self, paginator, page, is_paginated):
-        if not is_paginated:
-            return {}
-
-        left = []
-        right = []
-        left_has_more = False
-        right_has_more = False
-        first = False
-        last = False
-        page_number = page.number
-        total_pages = paginator.num_pages
-        page_range = paginator.page_range
-        if page_number == 1:
-            right = page_range[page_number: page_number + 2]
-            if right[-1] < total_pages - 1:
-                right_has_more = True
-            if right[-1] < total_pages:
-                last = True
-        elif page_number == total_pages:
-            left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0: page_number - 1]
-            if left[0] > 2:
-                left_has_more = True
-            if left[0] > 1:
-                first = True
-        else:
-            left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0: page_number - 1]
-            right = page_range[page_number: page_number + 2]
-            if right[-1] < total_pages - 1:
-                right_has_more = True
-            if right[-1] < total_pages:
-                last = True
-            if left[0] > 2:
-                left_has_more = True
-            if left[0] > 1:
-                first = True
-            
-        data = {
-            'left': left,
-            'right': right,
-            'right_has_more': right_has_more,
-            'left_has_more': left_has_more,
-            'first': first,
-            'last': last,
-        }
-        return data
+                for col in self.cols:
+                    elem = _help_dic[col](course) if not col == '教课老师' else _help_dic[col](teacher)
+                    row.elems.append(elem)
+                rows.append(row)
+        logger.error("datas size %d" % len(rows))
+        logger.error("%s, %s" % (rows[0].elems[0].elem_url, rows[0].elems[0].elem_str))
+        return rows
 
 class DetailViews(ListView):
     pass
