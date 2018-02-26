@@ -42,14 +42,10 @@ class IndexView(ListView):
     template_name = 'index.html'
     context_object_name = 'context'
     paginate_by = 10
-
-    def _get_cols(self):
-        raise NotImplementedError
+    new_url = ''
+    cols = []
 
     def _get_rows(self):
-        raise NotImplementedError
-
-    def _get_new_url(self):
         raise NotImplementedError
 
     def get_context_data(self, **kwargs):
@@ -60,8 +56,8 @@ class IndexView(ListView):
 
         pagination_data = self.pagination_data(paginator, page, is_paginated)
         context.update(pagination_data)
-        context['new_url'] = self._get_new_url()
-        context['cols'] = self._get_cols()
+        context['new_url'] = self.new_url
+        context['cols'] = self.cols
         context['rows'] = self._get_rows()
 
         return context

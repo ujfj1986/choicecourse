@@ -44,9 +44,9 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-left">
                             <li class="cl-effect-11"><a href="{% url 'course:index' %}" data-hover="课程信息">课程信息</a></li>
-                            <li class="cl-effect-11"><a href="about.html" data-hover="教师信息">教师信息</a></li>
-                            <li class="cl-effect-11"><a href="contact.html" data-hover="学生信息">学生信息</a></li>
-                            <li class="cl-effect-11"><a href="contact.html" data-hover="课时信息">课时信息</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'teacher:index' %}" data-hover="教师信息">教师信息</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'student:index' %}" data-hover="学生信息">学生信息</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'classinfo:index' %}" data-hover="课时信息">课时信息</a></li>
                         </ul>
                         <!--<ul class="nav navbar-nav navbar-right">
                             {% if session.isLogined %}

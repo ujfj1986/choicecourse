@@ -19,6 +19,9 @@ class Student(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return "/student/" + str(self.pk) + "/"
+
 
 class Teacher(models.Model):
     name = models.CharField(max_length=30,unique=True)
@@ -49,7 +52,8 @@ class Course(models.Model):
         return reverse('course:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return "%s, %s, %s" % (self.name, self.teachers.all(), self.grade)
+        return self.name
+        #return "%s, %s, %s" % (self.name, self.teachers.all(), self.grade)
 
     class Meta:
         #unique_together = ["name", "teachers", "grade"]
@@ -62,6 +66,10 @@ class ClassInfo(models.Model):
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     students = models.ManyToManyField(Student)
+    #class_len = models.IntegerField() #本节课课时时长。
+
+    def get_absolute_url(self):
+        return reverse('classinfo:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return "%s, %s, %s, %s" % (self.course, self.teacher, self.start_time, self.end_time)

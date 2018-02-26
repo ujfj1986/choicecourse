@@ -15,7 +15,7 @@ logger = logging.getLogger('course.view')
 class CourseIndexView(IndexView):
     model = Course
     new_url = 'http://127.0.0.1:8000/admin/course/course/'
-    cols = ["课程名称", "教课老师", "年级", "学生名单", "课时"]
+    cols = ["课程名称", "教课老师", "年级", "学生名单", "总课时"]
 
     @staticmethod
     def _get_name_element(course):
@@ -56,12 +56,6 @@ class CourseIndexView(IndexView):
         elem.elem_str = course.classes
         return elem
 
-    def _get_cols(self):
-        return self.cols
-
-    def _get_new_url(self):
-        return self.new_url
-    
     def _get_rows(self):
         courses = Course.objects.all()
         rows = []
