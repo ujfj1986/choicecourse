@@ -10,7 +10,7 @@ class DetailView(ListView):
 class ClassInfoIndexView(IndexView):
     model = ClassInfo
     cols = ['开始时间', '结束时间', '课程名称', '老师', '学生']
-    new_url = 'http://127.0.0.1:8000/admin/course/classinfo/'
+    new_url = '/admin/course/classinfo/'
 
     def _get_start_time_element(self, classinfo):
         elem = Element()

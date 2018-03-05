@@ -9,7 +9,7 @@ class DetailView(ListView):
 
 class TeacherIndexView(IndexView):
     model = Teacher
-    new_url = 'http://127.0.0.1:8000/admin/course/teacher/'
+    new_url = '/admin/course/teacher/'
     cols = ['教师姓名', '课程名称', '完成课时']
 
     @classmethod

@@ -20,7 +20,7 @@ class Student(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return "/student/" + str(self.pk) + "/"
+        return "/admin/course/student/" + str(self.pk) + "/change/"
 
 
 class Teacher(models.Model):
@@ -30,7 +30,7 @@ class Teacher(models.Model):
     #city = models.CharField(max_length=30)
     def get_absolute_url(self):
         #return reverse('teacher:detail', kwargs={'pk': self.pk})
-        return "/teacher/" + str(self.pk) + "/"
+        return "/admin/course/teacher/" + str(self.pk) + "/change/"
 
     def __str__(self):
         return self.name
@@ -49,7 +49,8 @@ class Course(models.Model):
     #startime = models.CharField(max_length=50)
     classes = models.IntegerField() #总课时，一个课一共分成几节
     def get_absolute_url(self):
-        return reverse('course:detail', kwargs={'pk': self.pk})
+        #return reverse('course:detail', kwargs={'pk': self.pk})
+        return "/admin/course/course/" + str(self.pk) + "/change/"
 
     def __str__(self):
         return self.name
@@ -69,7 +70,8 @@ class ClassInfo(models.Model):
     #class_len = models.IntegerField() #本节课课时时长。
 
     def get_absolute_url(self):
-        return reverse('classinfo:detail', kwargs={'pk': self.pk})
+        #return reverse('classinfo:detail', kwargs={'pk': self.pk})
+        return "/admin/course/classinfo/" + str(self.pk) + "/change/"
 
     def __str__(self):
         return "%s, %s, %s, %s" % (self.course, self.teacher, self.start_time, self.end_time)

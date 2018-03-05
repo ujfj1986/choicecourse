@@ -14,7 +14,7 @@ logger = logging.getLogger('course.view')
 # Create your views here.
 class CourseIndexView(IndexView):
     model = Course
-    new_url = 'http://127.0.0.1:8000/admin/course/course/'
+    new_url = '/admin/course/course/'
     cols = ["课程名称", "教课老师", "年级", "学生名单", "总课时"]
 
     @staticmethod
