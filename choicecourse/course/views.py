@@ -83,7 +83,8 @@ class CourseIndexView(IndexView):
                     row.elems.append(elem)
                 rows.append(row)
         logger.error("datas size %d" % len(rows))
-        logger.error("%s, %s" % (rows[0].elems[0].elem_url, rows[0].elems[0].elem_str))
+        if 0 < len(rows):
+            logger.error("%s, %s" % (rows[0].elems[0].elem_url, rows[0].elems[0].elem_str))
         return rows
 
 class DetailViews(ListView):
