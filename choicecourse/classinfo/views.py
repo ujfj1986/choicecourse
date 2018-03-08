@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from course.models import ClassInfo
 from course.baseviews import *
+from django.utils.timezone import localtime
 
 # Create your views here.
 class DetailView(ListView):
@@ -14,12 +15,12 @@ class ClassInfoIndexView(IndexView):
 
     def _get_start_time_element(self, classinfo):
         elem = Element()
-        elem.elem_str = str(classinfo.start_time)
+        elem.elem_str = localtime(classinfo.start_time).strftime("%y-%m-%d %X")
         return elem
 
     def _get_end_time_element(self, classinfo):
         elem = Element()
-        elem.elem_str = str(classinfo.end_time)
+        elem.elem_str = localtime(classinfo.end_time).strftime("%y-%m-%d %X")
         return elem
 
     def _get_course_element(self, classinfo):
